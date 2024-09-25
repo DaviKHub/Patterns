@@ -5,3 +5,7 @@ when "ruby" then puts "Подлиза"
 when "assembly" then puts "Извращенец"
 else puts "Такой язык не предусмотрен"
 end
+puts "Введите команду языка Ruby:"
+eval($stdin.gets.chomp) #eval запускает пользовательский код, написанный на ruby
+puts "Введите команду операционной системы:"
+system($stdin.gets.chomp) #system зaпускает команду операционной системы
