@@ -29,10 +29,12 @@ def first_plus(array)
   return first_element+1
 end
 
-
-print "Полученный массив: "
-array = [-1, 5, 141, -914, 351, 1, 0, -9]
-print(array, " \n")
-print "Минимальный элемент: #{find_min_element(array)}\n"
-print "Максимальный элемент: #{find_max_element(array)}\n"
-print"Номер первого положительного элемента: #{first_plus(array)}\n"
+selected_method=ARGV[0].to_i
+selected_array=ARGV[1]
+array = File.new(selected_array, "r:UTF-8").readlines.map(&:to_i)
+case selected_method
+when 1 then print "Минимальный элемент: #{find_min_element(array)}\n"
+when 2 then print "Максимальный элемент: #{find_max_element(array)}\n"
+when 3 then print"Номер первого положительного элемента: #{first_plus(array)}\n"
+else puts "Такой команды не существует"
+end
