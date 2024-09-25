@@ -11,5 +11,5 @@ end
 
 print "Полученный массив: "
 array = [-1, 5, 141, -914, 351, 1, 0, -9]
-print(array, "\n")
+print(array, " \n")
 print "Минимальный элемент: #{find_min_element(array)}\n"
