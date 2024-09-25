@@ -19,8 +19,21 @@ def min_odd_digit(n)
   return digits.min || nil
 end
 
+def sum_div(n)
+  sum = 0
+  sum_digits = n.digits.reduce{|sum, i| sum + i}
+  mul_digits = n.digits.reduce{|mul, i| mul * i}
+  (1..n).each do |i|
+    if n % i == 0 && i.gcd(sum_digits) == 1 && i.gcd(mul_digits) != 1
+      sum += i
+    end
+  end
+  return sum
+end
+
 
 print "Введите число: "
 n = gets.to_i.abs # to_i - преобразование строки в целое десятичное
 print "Количество делителей, которые не кратны 3: #{count_div_non_div_by_3(n)}\n"
 print "Минимальная нечетная цифра: #{min_odd_digit(n)}\n"
+print "Сумма всех делителей числа, взаимно простых с суммой цифр числа и не взаимно простых с произведением цифр числа: #{sum_div(n)}\n"
