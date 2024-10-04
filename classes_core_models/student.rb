@@ -1,11 +1,11 @@
 class Student
-  attr_accessor :id, :surname, :first_name, :second_name, :phone, :telegram, :mail, :git
+  attr_accessor :id, :surname, :first_name, :second_name, :telegram, :mail, :git,:phone
   def initialize(params={})
     @id=params[:id]
     @surname=params[:surname]
     @first_name=params[:first_name]
     @second_name=params[:second_name]
-    @phone=params[:phone]
+    @phone=params[:phone] if Student.is_phone?(params[:phone])
     @telegram=params[:telegram]
     @mail=params[:mail]
     @git=params[:git]
@@ -23,4 +23,8 @@ class Student
     str.push("GitHub: #{@git}") if git
     str.join("\n")
   end
+  def self.is_phone?(phone)
+    phone.match?(/\A\+?\d{10,11}\z/)
+  end
+
 end
