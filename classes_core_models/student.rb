@@ -72,5 +72,20 @@ class Student
   def self.valid_git?(git)
     git.match?(/\Ahttps:\/\/github.com\/[a-zA-Z0-9_-]+\z/)
   end
+  def self.any_contact_present?(phone, telegram, mail)
+    (!phone.nil? && !phone.empty?) ||
+      (!telegram.nil? && !telegram.empty?) ||
+      (!mail.nil? && !mail.empty?)
+  end
+  def self.git_present?(git)
+    !git.nil? && !git.empty?
+  end
+  def validate
+    errors=[]
+    errors.push("Git link is missing") if Student.git_present?(@git)==false
+    errors.push("Any contact is missing") if Student.any_contact_present?(@phone, @telegram, @mail)==false
+    return "Validating is successful" if errors.empty?
+    return "Validating is failed: #{errors.join("\n")}"
 
+  end
 end
