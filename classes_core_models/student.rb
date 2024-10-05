@@ -51,7 +51,7 @@ class Student
     str.join("\n")
   end
 
-  def self.parce_from_string(string)
+  def self.parse_from_string(string)
     data={}
     string.split("; ").each do |pair| key, value = pair.split(": ").map(&:strip)
       case key
@@ -73,7 +73,7 @@ class Student
     info+="Телефон: #{@phone}; " if phone
     info+="Телеграм: #{@telegram}; " if telegram
     info+="Почта: #{@mail}; " if mail
-    info.chop.strip
+    info.strip
   end
   def self.valid_id?(id)
     id.to_s.match?(/\A\d{10}+\z/)
@@ -113,5 +113,46 @@ class Student
     errors.push("Any contact is missing") if Student.any_contact_present?(@phone, @telegram, @mail)==false
     return "Validating is successful" if errors.empty?
     return "Validating is failed: #{errors.join("\n")}"
+  end
+end
+
+class Student_short < Student
+  attr_accessor :id, :git, :contact, :initials
+  def initialize(student)
+    if student.is_a?(Student)
+			@initials = "#{student.surname} #{student.name[0].upcase}.#{student.patronymic[0].upcase}"
+      @git = student.git if student.git
+      @contact = if student.phone
+                   "Телефон: #{student.phone}"
+                 elsif student.telegram
+                   "Телеграм: #{student.telegram}"
+                 elsif student.mail
+                   "Почта: #{student.mail}"
+                 end
+    elsif student.is_a?(String)
+      data = self.class.parse_from_string(student)
+			@id = data[:id] if data[:id]
+			@initials = data[:initials]
+			@git = data[:git] if data[:git]
+			@contact = data[:contact] if data[:contact]
+    end
+  end
+  def self.parse_from_string(string)
+		data = {}
+		string.split(';').each do |pair| key, value = pair.split(': ').map(&:strip)
+			case key
+			when "ФИО" then data[:initials] = value
+			when "GitHub" then data[:git] = value
+			when "Телефон", "Почта", "Телеграм" then data[:contact] = "#{key}: #{value}"
+			when "ID" then data[:id] = value.to_i
+			end
+		end
+		data
+	end
+  def get_info
+    info="ФИО: #{@initials}; "
+    info+="GitHub: #{@git}; " if git
+    info+="#{@contact if @contact};"
+    info.strip
   end
 end

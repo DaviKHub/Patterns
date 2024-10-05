@@ -15,6 +15,9 @@ student.set_contacts(git:"https://github.com/ivanov") #уточнение гит
 puts student.validate #валидация прошла (все данные введены)
 
 string_student_info="ID: 1234567890; Фамилия: Тестов; Имя: Тест; Отчество: Тестович; Телефон: +79123456789; Телеграм: @test; Почта: test@ya.ru; GitHub: https://github.com/test"
-student2=Student.parce_from_string(string_student_info)
+student2=Student.parse_from_string(string_student_info)
 puts student2.validate
-puts student.get_info
+
+puts student2.get_info
+student_short=Student_short.new(student2.get_info)
+puts student_short.get_info
