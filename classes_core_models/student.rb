@@ -51,8 +51,25 @@ class Student
     str.join("\n")
   end
 
+  def self.parce_from_string(string)
+    data={}
+    string.split("; ").each do |pair| key, value = pair.split(": ").map(&:strip)
+      case key
+      when "ID" then data[:id] = value.to_i
+      when "Фамилия" then data[:surname] = value
+      when "Имя" then data[:name] = value
+      when "Отчество" then data[:patronymic] = value
+      when "Телефон" then data[:phone] = value
+      when "Телеграм" then data[:telegram] = value
+      when "Почта" then data[:mail] = value
+      when "GitHub" then data[:git] = value
+      end
+    end
+    self.new(**data) #преобразование в хэш с помощью **
+  end
+
   def self.valid_id?(id)
-    id.match?(/\A\d{10}\z/)
+    id.to_s.match?(/\A\d{10}+\z/)
   end
   def self.valid_surname?(surname)
     surname.match?(/\A[A-ZА-Я][a-zа-яё\-']{1,}\z/)
@@ -67,7 +84,7 @@ class Student
     phone.match?(/\A\+?\d{10,11}\z/)
   end
   def self.valid_telegram?(telegram)
-    telegram.match?(/\A@[a-zA-Z0-9_]{5,}\z/)
+    telegram.match?(/\A@[a-zA-Z0-9_]{4,}\z/)
   end
   def self.valid_mail?(mail)
     mail.match?(/\A[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[^@\s]+\z/)
