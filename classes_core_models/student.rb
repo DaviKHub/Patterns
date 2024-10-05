@@ -1,14 +1,17 @@
 class Student
-  attr_reader :id, :phone, :telegram, :mail, :git, :surname, :name, :patronymic #автоматическое создание только геттеров
+  attr_reader :id, :surname, :name, :patronymic, :phone, :telegram, :mail, :git #автоматическое создание только геттеров
   def initialize(params={})
     self.id=params[:id] if params[:id]
     self.surname=params[:surname] if params[:surname]
     self.name=params[:name] if params[:name]
     self.patronymic=params[:patronymic] if params[:patronymic]
-    self.phone=params[:phone] if params[:phone]
-    self.telegram=params[:telegram] if params[:telegram]
-    self.mail=params[:mail] if params[:mail]
-    self.git=params[:git] if params[:git]
+    set_contacts(params) if params.key?(:phone) || params.key?(:telegram) || params.key?(:mail) || params.key?(:git)
+  end
+  def set_contacts(params={})
+    self.phone = params[:phone] if params[:phone]
+    self.telegram = params[:telegram] if params[:telegram]
+    self.mail = params[:mail] if params[:mail]
+    self.git = params[:git] if params[:git]
   end
   def id=(id)
     Student.valid_id?(id)? @id = id : puts("ID is invalid")
@@ -22,16 +25,16 @@ class Student
   def patronymic=(patronymic)
     Student.valid_patronymic?(patronymic)? @patronymic = patronymic : puts("Patronymic is invalid")
   end
-  def phone=(phone)
+  private def phone=(phone)
     Student.valid_phone?(phone)? @phone = phone : puts("Phone number is invalid")
   end
-  def telegram=(telegram)
+  private def telegram=(telegram)
     Student.valid_telegram?(telegram)? @telegram = telegram : puts("Telegram is invalid")
   end
-  def mail=(mail)
+  private def mail=(mail)
     Student.valid_mail?(mail)? @mail = mail : puts("Mail is invalid")
   end
-  def git=(git)
+  private def git=(git)
     Student.valid_git?(git)? @git = git : puts("Git link is invalid")
   end
 
@@ -86,6 +89,5 @@ class Student
     errors.push("Any contact is missing") if Student.any_contact_present?(@phone, @telegram, @mail)==false
     return "Validating is successful" if errors.empty?
     return "Validating is failed: #{errors.join("\n")}"
-
   end
 end
