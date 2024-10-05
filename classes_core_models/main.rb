@@ -17,7 +17,7 @@ puts student.validate #валидация прошла (все данные вв
 string_student_info="ID: 1234567890; Фамилия: Тестов; Имя: Тест; Отчество: Тестович; Телефон: +79123456789; Телеграм: @test; Почта: test@ya.ru; GitHub: https://github.com/test"
 student2=Student.parse_from_string(string_student_info)
 puts student2.validate
-
-puts student2.get_info
-student_short=Student_short.new(student2.get_info)
-puts student_short.get_info
+student_short=Student_short.new(string_student_info)
+puts student_short.validate
+student_short=Student_short.new(student2)
+puts student_short.validate
