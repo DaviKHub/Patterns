@@ -67,7 +67,14 @@ class Student
     end
     self.new(**data) #преобразование в хэш с помощью **
   end
-
+  def get_info
+    info="ФИО: #{@surname} #{@name[0].upcase}.#{@patronymic[0].upcase}; "
+    info+="GitHub: #{@git}; " if git
+    info+="Телефон: #{@phone}; " if phone
+    info+="Телеграм: #{@telegram}; " if telegram
+    info+="Почта: #{@mail}; " if mail
+    info.chop.strip
+  end
   def self.valid_id?(id)
     id.to_s.match?(/\A\d{10}+\z/)
   end
