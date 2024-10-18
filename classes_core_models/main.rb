@@ -1,5 +1,5 @@
 require_relative 'student'
-
+require_relative 'student_short'
 student_info = {
   id: "1987654321",
   surname: "Иванов",
@@ -30,4 +30,8 @@ end
 students_1 = read_from_txt('/Users/david/Patterns_proj/classes_core_models/students.txt')
 write_to_txt('/Users/david/Patterns_proj/classes_core_models/', 'students_1', students_1)
 students_2 = read_from_txt('/Users/david/Patterns_proj/classes_core_models/students_1.txt')
-puts students_1.map(&:to_s) == students_2.map(&:to_s)
+puts students_1.join(" ") == students_2.join(" ")
+
+string="ID: 1111111111; initials: ТестовТ.Т.; Phone: +79123456789; Telegram: @test; Mail: test@ya.ru; GitHub: https://github.com/test"
+puts StudentShort.new(string)
+puts StudentShort.new(student)
