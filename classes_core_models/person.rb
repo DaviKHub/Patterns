@@ -1,40 +1,21 @@
 class Person
-  attr_reader :id, :name, :surname, :patronymic, :git
+  attr_reader :id, :git # автоматическая генерация геттеров
 
-  def initialize(id:, surname:, name:, patronymic:, git: nil)
-    self.id = id
-    self.surname = surname
-    self.name = name
-    self.patronymic = patronymic
-    self.git = git
+  def initialize(id: nil, git: nil, contact: nil)
+    self.id = id if id
+    self.git = git if git
   end
 
   def id=(id)
-    self.class.valid_id?(id) ? @id = id : raise(ArgumentError)
-  end
-
-  def surname=(surname)
-    self.class.valid_name_parts?(surname) ? @surname = surname : raise(surname)
-  end
-
-  def name=(name)
-    self.class.valid_name_parts?(name) ? @name = name : raise(name)
-  end
-
-  def patronymic=(patronymic)
-    self.class.valid_name_parts?(patronymic) ? @patronymic = patronymic : raise(patronymic)
+    self.class.valid_id?(id) ? @id = id : raise(ArgumentError, id)
   end
 
   def git=(git)
-    self.class.valid_git?(git) ? @git = git : raise(ArgumentError)
+    self.class.valid_git?(git) ? @git = git : raise(ArgumentError, git)
   end
 
   def self.valid_id?(id)
     id.match?(/\A\d{10}\z/)
-  end
-
-  def self.valid_name_parts?(string)
-    string.match?(/\A[A-ZА-Я][a-zа-яё\-']{0,}\z/)
   end
 
   def self.valid_git?(git)
@@ -48,12 +29,6 @@ class Person
       case key.downcase
       when "id"
         data[:id] = value
-      when "фамилия"
-        data[:surname] = value
-      when "имя"
-        data[:name] = value
-      when "отчество"
-        data[:patronymic] = value
       when "github"
         data[:git] = value
       end

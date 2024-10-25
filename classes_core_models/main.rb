@@ -1,17 +1,5 @@
 require_relative 'student'
 require_relative 'student_short'
-student_info = {
-  id: "1987654321",
-  surname: "Иванов",
-  name: "Иван",
-  patronymic: "Иванович",
-  phone: "+7912345678",
-  telegram: "@ivanov",
-  mail: "ivanov@ya.ru",
-  git: "https://github.com/ivanov"
-}
-string = "ID: 1111111111; Фамилия: Тестов; Имя: Тест; Отчество: Тестович; Телефон: +79123456789; Телеграм: @test; Почта: test@ya.ru; GitHub: https://github.com/test"
-student = Student.parse_from_string(string)
 
 def read_from_txt(path)
   students = []
@@ -27,11 +15,32 @@ def write_to_txt(path, file_name, students)
   end
 end
 
-students_1 = read_from_txt('/Users/david/Patterns_proj/classes_core_models/students.txt')
-write_to_txt('/Users/david/Patterns_proj/classes_core_models/', 'students_1', students_1)
-students_2 = read_from_txt('/Users/david/Patterns_proj/classes_core_models/students_1.txt')
-puts students_1.join(" ") == students_2.join(" ")
+#данные из хэша
+student_info = {
+  id: "1987654321",
+  surname: "Иванов",
+  name: "Иван",
+  patronymic: "Иванович",
+  phone: "+7912345678",
+  telegram: "@ivanov",
+  mail: "ivanov@ya.ru",
+  git: "https://github.com/ivanov"
+}
+puts Student.new(student_info)
 
-string="ID: 1111111111; initials: ТестовТ.Т.; Phone: +79123456789; Telegram: @test; Mail: test@ya.ru; GitHub: https://github.com/test"
-puts StudentShort.new(string)
-puts StudentShort.new(student)
+#данные из строки
+string = "ID: 1111111111; Фамилия: Тестов; Имя: Тест; Отчество: Тестович; Телефон: +79123456789; Телеграм: @test; Почта: test@ya.ru; GitHub: https://github.com/test"
+student = Student.parse_from_string(string)
+puts student
+string="ID: 1111111111; Инициалы: ТестовТ.Т.; GitHub: https://github.com/test; Контакт: +79123456789"
+puts StudentShort.initialize_from_string(string)
+
+#данные из студента
+puts StudentShort.initialize_from_student(student)
+
+#проверка совместимости чтения из файла и запись в него
+
+students_1 = read_from_txt("classes_core_models/students.txt")
+write_to_txt("classes_core_models", "students_1", students_1)
+students_2=read_from_txt("classes_core_models/students_1.txt")
+puts students_1.map{|student|student.to_s} == students_2.map{|student|student.to_s}

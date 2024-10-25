@@ -1,51 +1,53 @@
 require_relative 'person'
 
 class StudentShort < Person
-  attr_reader :initials, :contacts
+  attr_reader :initials, :contact
 
-  def initialize(data_or_id)
-    @contacts = []
-    if data_or_id.is_a?(Student)
-      initialize_from_student(data_or_id)
-    elsif data_or_id.is_a?(String)
-      initialize_from_string(data_or_id)
-    end
+  private def initialize(id: nil, initials:, contact: nil, git: nil)
+    super(id: id,
+          git: git,
+    )
+    self.contact = contact
+    self.initials = initials
   end
 
   def to_s
     info = []
     info.push("ID: #{@id}") if id
-    info.push("Initials: #{@initials}")
+    info.push("Инициалы: #{@initials}")
     info.push("GitHub: #{@git}") if git
-    info.push("#{@contacts.join("; ")}") unless @contacts.empty?
+    info.push("Контакт: #{@contact}")
     info.compact.join("; ")
   end
 
-  private def initialize_from_student(student)
-    @id = student.id
-    @initials = "#{student.surname}#{student.name[0]}.#{student.patronymic[0]}."
-    @git = student.git
-    @contacts << "Phone: #{student.phone}" if student.phone
-    @contacts << "Telegram: #{student.telegram}" if student.telegram
-    @contacts << "Mail: #{student.mail}" if student.mail
+  def initials=(initials)
+    @initials = initials
   end
 
-  private def initialize_from_string(string)
+  def contact=(contact)
+    @contact = contact
+  end
+
+  def self.initialize_from_student(student)
+    data = {}
+    data[:id] = student.id if student.id
+    data[:initials] = "#{student.surname}#{student.name[0]}.#{student.patronymic[0]}."
+    data[:git] = student.git
+    data[:contact] = student.get_contact
+    StudentShort.new(**data)
+  end
+
+  def self.initialize_from_string(string)
     data = Person.parse_from_string(string)
-    @id = data[:id]
-    @git = data[:git]
     string.split('; ').each do |pair|
       key, value = pair.split(': ').map(&:strip)
       case key.downcase
-      when "initials"
-        @initials = value
-      when "phone"
-        @contacts << "Phone: #{value}"
-      when "telegram"
-        @contacts << "Telegram: #{value}"
-      when "mail"
-        @contacts << "Mail: #{value}"
+      when "инициалы"
+        data[:initials] = value
+      when "контакт"
+        data[:contact] = value
       end
     end
+    StudentShort.new(**data)
   end
 end

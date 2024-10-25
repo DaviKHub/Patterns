@@ -1,16 +1,17 @@
 require_relative 'person'
 
 class Student < Person
-  attr_reader :phone, :telegram, :mail
+  attr_reader :name, :surname, :patronymic, :phone, :telegram, :mail
 
   def initialize(surname:, name:, patronymic:, id: nil, phone: nil, telegram: nil, mail: nil, git: nil)
     super(
-      surname: surname,
-      name: name,
-      patronymic: patronymic,
       id: id,
-      git: git
+      git: git,
+      contact: get_contact
     )
+    self.surname = surname
+    self.name = name
+    self.patronymic = patronymic
     set_contact(phone: phone, telegram: telegram, mail: mail)
   end
 
@@ -20,16 +21,32 @@ class Student < Person
     self.mail = mail if mail
   end
 
+  def surname=(surname)
+    self.class.valid_name_parts?(surname) ? @surname = surname : raise(ArgumentError, surname)
+  end
+
+  def name=(name)
+    self.class.valid_name_parts?(name) ? @name = name : raise(ArgumentError, name)
+  end
+
+  def patronymic=(patronymic)
+    self.class.valid_name_parts?(patronymic) ? @patronymic = patronymic : raise(ArgumentError, patronymic)
+  end
+
   private def phone=(phone)
-    self.class.valid_phone?(phone) ? @phone = phone : raise(ArgumentError)
+    self.class.valid_phone?(phone) ? @phone = phone : raise(ArgumentError, phone)
   end
 
   private def telegram=(telegram)
-    self.class.valid_telegram?(telegram) ? @telegram = telegram : raise(ArgumentError)
+    self.class.valid_telegram?(telegram) ? @telegram = telegram : raise(ArgumentError, telegram)
   end
 
   private def mail=(mail)
-    self.class.valid_mail?(mail) ? @mail = mail : raise(ArgumentError)
+    self.class.valid_mail?(mail) ? @mail = mail : raise(ArgumentError, mail)
+  end
+
+  def self.valid_name_parts?(string)
+    string.match?(/\A[A-ZА-Я][a-zа-яё\-']{0,}\z/)
   end
 
   def self.valid_phone?(phone)
@@ -57,6 +74,7 @@ class Student < Person
   def validate
     git_present?(@git) || any_contact_present?(@phone, @telegram, @mail)
   end
+
   def to_s
     str = []
     str.push ("ID: #{@id}") if id
@@ -80,12 +98,24 @@ class Student < Person
     info.join(";")
   end
 
+  def get_contact
+    return @phone if phone
+    return @mail if mail
+    return @telegram if telegram
+    return nil
+  end
+
   def self.parse_from_string(string)
     data = Person.parse_from_string(string)
-
     string.split('; ').each do |pair|
       key, value = pair.split(': ').map(&:strip)
       case key.downcase
+      when "фамилия"
+        data[:surname] = value
+      when "имя"
+        data[:name] = value
+      when "отчество"
+        data[:patronymic] = value
       when "github"
         data[:git] = value
       when "телефон"
