@@ -5,7 +5,7 @@ class StudentShort < Person
 
   private def initialize(id: nil, initials:, contact: nil, git: nil)
     super(id: id,
-          git: git,
+          git: git
     )
     self.contact = contact
     self.initials = initials

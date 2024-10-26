@@ -1,7 +1,7 @@
 class Person
   attr_reader :id, :git # автоматическая генерация геттеров
 
-  def initialize(id: nil, git: nil, contact: nil)
+  def initialize(id: nil, git: nil)
     self.id = id if id
     self.git = git if git
   end

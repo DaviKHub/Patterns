@@ -6,8 +6,7 @@ class Student < Person
   def initialize(surname:, name:, patronymic:, id: nil, phone: nil, telegram: nil, mail: nil, git: nil)
     super(
       id: id,
-      git: git,
-      contact: get_contact
+      git: git
     )
     self.surname = surname
     self.name = name

@@ -40,7 +40,7 @@ puts StudentShort.initialize_from_student(student)
 
 #проверка совместимости чтения из файла и запись в него
 
-students_1 = read_from_txt("classes_core_models/students.txt")
-write_to_txt("classes_core_models", "students_1", students_1)
-students_2=read_from_txt("classes_core_models/students_1.txt")
+students_1 = read_from_txt("student/students.txt")
+write_to_txt("student", "students_1", students_1)
+students_2=read_from_txt("student/students_1.txt")
 puts students_1.map{|student|student.to_s} == students_2.map{|student|student.to_s}
