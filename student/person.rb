@@ -22,6 +22,10 @@ class Person
     git.match?(/\Ahttps:\/\/github.com\/[a-zA-Z0-9_-]+\z/)
   end
 
+  private def git_present?(git)
+    !git.nil? && !git.empty?
+  end
+
   def self.parse_from_string(string)
     data = {}
     string.split('; ').each do |pair|

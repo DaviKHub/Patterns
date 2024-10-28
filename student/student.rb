@@ -1,7 +1,7 @@
 require_relative 'person'
 
 class Student < Person
-  attr_reader :name, :surname, :patronymic, :phone, :telegram, :mail
+  attr_reader :surname, :name, :patronymic, :phone, :telegram, :mail
 
   def initialize(surname:, name:, patronymic:, id: nil, phone: nil, telegram: nil, mail: nil, git: nil)
     super(
@@ -60,18 +60,12 @@ class Student < Person
     mail.match?(/\A[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[^@\s]+\z/)
   end
 
-  private def any_contact_present?(phone, telegram, mail)
-    (!phone.nil? && !phone.empty?) ||
-      (!telegram.nil? && !telegram.empty?) ||
-      (!mail.nil? && !mail.empty?)
+  private def contact_present?(contact)
+    !contact.nil? && !contact.empty?
   end
 
-  private def git_present?(git)
-    !git.nil? && !git.empty?
-  end
-
-  def validate
-    git_present?(@git) || any_contact_present?(@phone, @telegram, @mail)
+  def validate?
+    git_present?(@git) || contact_present?(contact)
   end
 
   def to_s
@@ -89,7 +83,7 @@ class Student < Person
 
   def get_info
     info = []
-    info.push("Инициалы: #{surname}.#{name[0]}.#{patronymic[0]}.")
+    info.push("Инициалы: #{initials}")
     info.push("GitHub: #{@git}") if git
     info.push("Телефон: #{@phone}") if phone
     info.push("Телеграм: #{@telegram}") if telegram
@@ -97,11 +91,15 @@ class Student < Person
     info.join(";")
   end
 
-  def get_contact
+  def contact
     return @phone if phone
     return @mail if mail
     return @telegram if telegram
     return nil
+  end
+
+  def initials
+    "#{surname}#{name[0]}.#{patronymic[0]}."
   end
 
   def self.parse_from_string(string)
