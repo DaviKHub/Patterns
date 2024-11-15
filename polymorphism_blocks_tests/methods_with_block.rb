@@ -13,3 +13,8 @@ end
 def max_in_range?(array, a, b)
   yield(array[a..b].include?(array.max)) if block_given?
 end
+
+def new_array(array)
+  avg = array.sum.to_f / array.size
+  yield(array.select { |element| element > avg && element < array.max }) if block_given?
+end
