@@ -9,3 +9,7 @@ def swap!(array)
   array[min_index], array[max_index] = array[max_index], array[min_index]
   yield(array) if block_given?
 end
+
+def max_in_range?(array, a, b)
+  yield(array[a..b].include?(array.max)) if block_given?
+end
