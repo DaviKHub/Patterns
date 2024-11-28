@@ -35,3 +35,11 @@ class ArrayMethods
     accumulator
   end
 
+  def max_by(n = 1)
+    return nil if array.empty?
+    array.map { |element| [yield(element), element] }
+         .sort { |a, b| b[0] <=> a[0] }
+         .first(n)
+         .map { |pair| pair[1] }
+  end
+
