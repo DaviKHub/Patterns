@@ -39,4 +39,13 @@ class Person
     end
     data
   end
+
+  protected def validate?
+    raise(NotImplementedError)
+  end
+
+  protected def contact
+    raise(NotImplementedError)
+  end
+
 end

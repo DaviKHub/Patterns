@@ -10,7 +10,6 @@ class StudentShort < Person
     self.contact = contact
     self.initials = initials
   end
-
   def initials=(initials)
     @initials = initials
   end
@@ -54,4 +53,6 @@ class StudentShort < Person
   def validate?
     git_present?(@git) || !@contact.nil? && !@contact.empty?
   end
+
+  private_class_method :new
 end
