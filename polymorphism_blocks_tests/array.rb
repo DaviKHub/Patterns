@@ -59,3 +59,22 @@ class ArrayMethods
   end
 end
 
+array1 = ArrayMethods.new([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+array2 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+print "#{array1.each_slice(4) { |a| puts "#{a.inspect}" }}\n"
+print "#{array2.each_slice(4) { |a| puts "#{a.inspect}" }}\n"
+puts
+print "#{array1.cycle(3) { |a| print "#{a.inspect}" }}\n"
+print "#{array2.cycle(3) { |a| print "#{a.inspect}" }}\n"
+puts
+print "#{array1.inject { |sum, element| sum + element }}\n"
+print "#{array2.inject { |sum, element| sum + element }}\n"
+puts
+print "#{array1.max_by(5) { |a| a.even? ? a : -1 }}\n"
+print "#{array2.max_by(5) { |a| a.even? ? a : -1 }}\n"
+puts
+print "#{array1.reject { |a| a.even? }}\n"
+print "#{array2.reject { |a| a.even? }}\n"
+puts
+print "#{array1.sort_by { |a| -a }}\n"
+print "#{array2.sort_by { |a| -a }}\n"
