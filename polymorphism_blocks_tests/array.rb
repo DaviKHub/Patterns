@@ -26,3 +26,12 @@ class ArrayMethods
     nil
   end
 
+  def inject(start_value = nil)
+    accumulator = start_value.nil? ? array[0] : start_value
+    start = start_value.nil? ? 1 : 0
+    array[start..-1].each do |i|
+      accumulator = yield(accumulator, i) if block_given?
+    end
+    accumulator
+  end
+
