@@ -51,3 +51,11 @@ class ArrayMethods
     array
   end
 
+  def sort_by
+    return nil if array.empty?
+    array.map { |element| [yield(element), element] }
+         .sort { |a, b| a[0] <=> b[0] }
+         .map { |pair| pair[1] }
+  end
+end
+
