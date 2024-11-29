@@ -14,14 +14,11 @@ def write_to_txt(path, file_name, students)
   end
 end
 
-tree = BinaryTree.new()
+tree = BinaryTree.new
 students = read_from_txt("/Users/david/Patterns/Patterns_proj/student/students.txt")
 students.each do |student|
   tree.insert(student)
 end
-#tree.each {|el| puts el.obj}
+tree.each {|el| puts el.obj.id}
 
-students.sort! {|a,b| a.birthyear <=> b.birthyear}
-students.each do |student|
-  puts student
-end
+puts students.sort! {|a,b| a <=> b}

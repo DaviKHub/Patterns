@@ -13,7 +13,7 @@ class BinaryTree
     @root.nil? ? @root = TreeNode.new(obj) : insert_node(@root, obj)
   end
 
-  def insert_node(node, obj)
+  private def insert_node(node, obj)
     if obj <= node.obj
       if node.left.nil?
         node.left = TreeNode.new(obj)

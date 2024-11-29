@@ -3,9 +3,9 @@ require_relative 'person'
 class Student < Person
 
   include Comparable
-  attr_reader :surname, :name, :patronymic, :phone, :telegram, :mail, :birthyear
+  attr_reader :surname, :name, :patronymic, :phone, :telegram, :mail, :birthdate
 
-  def initialize(surname:, name:, patronymic:, id: nil, phone: nil, telegram: nil, mail: nil, git: nil, birthyear: nil)
+  def initialize(surname:, name:, patronymic:, id: nil, phone: nil, telegram: nil, mail: nil, git: nil, birthdate:nil)
     super(
       id: id,
       git: git
@@ -13,7 +13,7 @@ class Student < Person
     self.surname = surname
     self.name = name
     self.patronymic = patronymic
-    self.birthyear = birthyear
+    self.birthdate = birthdate
     set_contact(phone: phone, telegram: telegram, mail: mail)
   end
 
@@ -47,8 +47,8 @@ class Student < Person
     self.class.valid_mail?(mail) ? @mail = mail : raise(ArgumentError, mail)
   end
 
-  def birthyear=(birthyear)
-    self.class.valid_year?(birthyear) ? @birthyear = birthyear : raise(ArgumentError, birthyear)
+  def birthdate=(birthdate)
+    self.class.valid_date?(birthdate) ? @birthdate = birthdate : raise(ArgumentError, birthdate)
   end
 
   def self.valid_name_parts?(string)
@@ -67,8 +67,8 @@ class Student < Person
     mail.match?(/\A[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[^@\s]+\z/)
   end
 
-  def self.valid_year?(date)
-    date.match?(/^\d{4}$/)
+  def self.valid_date?(date)
+    date.match?(/^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[0-2])\.(19|20)\d{2}$/)
   end
 
   private def contact_present?(contact)
@@ -89,7 +89,7 @@ class Student < Person
     str.push("Телеграм: #{@telegram}") if telegram
     str.push("Почта: #{@mail}") if mail
     str.push("GitHub: #{@git}") if git
-    str.push("ДатаРождения: #{@birthyear}")
+    str.push("ДатаРождения: #{@birthdate}")
     str.compact.join("; ")
   end
 
@@ -134,18 +134,15 @@ class Student < Person
       when "телеграм"
         data[:telegram] = value
       when "датарождения"
-        data[:birthyear] = value
+        data[:birthdate] = value
       end
     end
     Student.new(**data)
   end
 
   def <=>(other)
-    return nil unless other.is_a?(Student)
-    @birthyear <=> other.birthyear
-  end
-
-  def ==(other)
-    other.is_a?(Student) && @birthyear == other.birthyear
+    day1, month1, year1 = @birthdate.split('.').map(&:to_i)
+    day2, month2, year2 = other.birthdate.split('.').map(&:to_i)
+    [year1, month1, day1] <=> [year2, month2, day2]
   end
 end
