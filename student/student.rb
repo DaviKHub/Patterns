@@ -48,7 +48,7 @@ class Student < Person
   end
 
   def birthyear=(birthyear)
-    self.class.valid_date?(birthyear) ? @birthyear = birthyear : raise(ArgumentError, birthyear)
+    self.class.valid_year?(birthyear) ? @birthyear = birthyear : raise(ArgumentError, birthyear)
   end
 
   def self.valid_name_parts?(string)
