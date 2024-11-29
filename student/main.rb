@@ -19,6 +19,6 @@ students = read_from_txt("/Users/david/Patterns/Patterns_proj/student/students.t
 students.each do |student|
   tree.insert(student)
 end
-tree.each {|el| puts el.obj.id}
+tree.each {|el| puts el.obj}
 
 puts students.sort! {|a,b| a <=> b}
