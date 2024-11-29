@@ -1,9 +1,11 @@
 require_relative 'person'
 
 class Student < Person
-  attr_reader :surname, :name, :patronymic, :phone, :telegram, :mail
 
-  def initialize(surname:, name:, patronymic:, id: nil, phone: nil, telegram: nil, mail: nil, git: nil)
+  include Comparable
+  attr_reader :surname, :name, :patronymic, :phone, :telegram, :mail, :birthyear
+
+  def initialize(surname:, name:, patronymic:, id: nil, phone: nil, telegram: nil, mail: nil, git: nil, birthyear: nil)
     super(
       id: id,
       git: git
@@ -11,6 +13,7 @@ class Student < Person
     self.surname = surname
     self.name = name
     self.patronymic = patronymic
+    self.birthyear = birthyear
     set_contact(phone: phone, telegram: telegram, mail: mail)
   end
 
@@ -44,6 +47,10 @@ class Student < Person
     self.class.valid_mail?(mail) ? @mail = mail : raise(ArgumentError, mail)
   end
 
+  def birthyear=(birthyear)
+    self.class.valid_date?(birthyear) ? @birthyear = birthyear : raise(ArgumentError, birthyear)
+  end
+
   def self.valid_name_parts?(string)
     string.match?(/\A[A-ZА-Я][a-zа-яё\-']{0,}\z/)
   end
@@ -58,6 +65,10 @@ class Student < Person
 
   def self.valid_mail?(mail)
     mail.match?(/\A[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[^@\s]+\z/)
+  end
+
+  def self.valid_year?(date)
+    date.match?(/^\d{4}$/)
   end
 
   private def contact_present?(contact)
@@ -78,6 +89,7 @@ class Student < Person
     str.push("Телеграм: #{@telegram}") if telegram
     str.push("Почта: #{@mail}") if mail
     str.push("GitHub: #{@git}") if git
+    str.push("ДатаРождения: #{@birthyear}")
     str.compact.join("; ")
   end
 
@@ -121,8 +133,19 @@ class Student < Person
         data[:mail] = value
       when "телеграм"
         data[:telegram] = value
+      when "датарождения"
+        data[:birthyear] = value
       end
     end
     Student.new(**data)
+  end
+
+  def <=>(other)
+    return nil unless other.is_a?(Student)
+    @birthyear <=> other.birthyear
+  end
+
+  def ==(other)
+    other.is_a?(Student) && @birthyear == other.birthyear
   end
 end
