@@ -3,13 +3,14 @@ require_relative 'person'
 class StudentShort < Person
   attr_reader :initials, :contact
 
-  private def initialize(initials:, id: nil, contact: nil, git: nil)
+  def initialize(initials:, id: nil, contact: nil, git: nil)
     super(id: id,
           git: git
     )
     self.contact = contact
     self.initials = initials
   end
+
   def initials=(initials)
     @initials = initials
   end
@@ -24,7 +25,7 @@ class StudentShort < Person
     data[:initials] = student.initials
     data[:git] = student.git
     data[:contact] = student.contact
-    StudentShort.new(**data)
+    StudentShort.send(:new, **data)
   end
 
   def self.initialize_from_string(string)
@@ -38,7 +39,7 @@ class StudentShort < Person
         data[:contact] = value
       end
     end
-    StudentShort.new(**data)
+    StudentShort.send(:new, **data)
   end
 
   def to_s
