@@ -1,4 +1,4 @@
-class Data_table
+class DataTable
   private attr_reader :data
 
   def initialize(data)
