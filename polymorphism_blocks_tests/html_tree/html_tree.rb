@@ -40,4 +40,5 @@ class HtmlTree
       "#{spaces}#{open_tag}/>\n"
     end
   end
+
 end

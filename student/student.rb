@@ -1,11 +1,12 @@
 require_relative 'person'
+require 'date'
 
 class Student < Person
 
   include Comparable
   attr_reader :surname, :name, :patronymic, :phone, :telegram, :mail, :birthdate
 
-  def initialize(surname:, name:, patronymic:, id: nil, phone: nil, telegram: nil, mail: nil, git: nil, birthdate:nil)
+  def initialize(surname:, name:, patronymic:, id: nil, phone: nil, telegram: nil, mail: nil, git: nil, birthdate: nil)
     super(
       id: id,
       git: git
@@ -48,7 +49,7 @@ class Student < Person
   end
 
   def birthdate=(birthdate)
-    self.class.valid_date?(birthdate) ? @birthdate = birthdate : raise(ArgumentError, birthdate)
+    Student.valid_date?(birthdate) ? @birthdate = Date.strptime(birthdate, '%d-%m-%Y') : raise(ArgumentError, birthdate)
   end
 
   def self.valid_name_parts?(string)
@@ -68,7 +69,12 @@ class Student < Person
   end
 
   def self.valid_date?(date)
-    date.match?(/^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[0-2])\.(19|20)\d{2}$/)
+    begin
+      Date.strptime(date, '%d-%m-%Y')
+      true
+    rescue ArgumentError
+      false
+    end
   end
 
   private def contact_present?(contact)
@@ -141,8 +147,7 @@ class Student < Person
   end
 
   def <=>(other)
-    day1, month1, year1 = @birthdate.split('.').map(&:to_i)
-    day2, month2, year2 = other.birthdate.split('.').map(&:to_i)
-    [year1, month1, day1] <=> [year2, month2, day2]
+    return nil unless other.is_a?(Student)
+    birthdate <=> other.birthdate
   end
 end

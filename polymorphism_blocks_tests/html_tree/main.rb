@@ -12,6 +12,8 @@ tree = Tree.new(
   </body>
 </html>'
 )
-tree.each_bfs{|a|print "#{a.tag} "}
-puts
-tree.each_dfs{|a|print "#{a.tag} "}
+# tree.each_bfs{|a|print "#{a.tag} "}
+# puts
+#tree.each_dfs{|a|print "#{a.tag} "}
+tags=tree.select{|tag|tag.tag == 'p'}
+puts tags

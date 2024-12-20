@@ -1,8 +1,9 @@
 class ArrayMethods
-  attr_reader :array
+
+  attr_accessor :array
 
   def initialize(array)
-    self.array = array
+    @array = array.dup.freeze
   end
 
   private def array=(array)
@@ -35,12 +36,27 @@ class ArrayMethods
     accumulator
   end
 
-  def max_by(n = 1)
-    return nil if array.empty?
-    array.map { |element| [yield(element), element] }
-         .sort { |a, b| b[0] <=> a[0] }
-         .first(n)
-         .map { |pair| pair[1] }
+  def max_by()
+    return nil if @array.empty?
+    max_element = @array.first
+    max_value = yield(max_element)
+    @array.each do |element|
+      value = yield(element)
+      if value > max_value
+        max_value = value
+        max_element = element
+      end
+    end
+    max_element
+  end
+
+  def max()
+    return nil if @array.empty?
+    max_element = @array.first
+    @array.each do |element|
+      max_element = element if yield(element, max_element) > 0
+    end
+    max_element
   end
 
   def reject
@@ -52,29 +68,24 @@ class ArrayMethods
   end
 
   def sort_by
-    return nil if array.empty?
-    array.map { |element| [yield(element), element] }
-         .sort { |a, b| a[0] <=> b[0] }
-         .map { |pair| pair[1] }
+    return [] if @array.empty?
+    sorted_array = []
+    @array.each do |element|
+      index = 0
+      while index < sorted_array.size && yield(sorted_array[index]) <= yield(element)
+        index += 1
+      end
+      sorted_array.insert(index, element)
+    end
+    sorted_array
+  end
+
+  def to_a
+    @array
   end
 end
+# array=ArrayMethods.new([1,2,3,4,5,6])
+# array.max_by{|a|a.even?}
 
-array1 = ArrayMethods.new([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-array2 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-print "#{array1.each_slice(4) { |a| puts "#{a.inspect}" }}\n"
-print "#{array2.each_slice(4) { |a| puts "#{a.inspect}" }}\n"
-puts
-print "#{array1.cycle(3) { |a| print "#{a.inspect}" }}\n"
-print "#{array2.cycle(3) { |a| print "#{a.inspect}" }}\n"
-puts
-print "#{array1.inject { |sum, element| sum + element }}\n"
-print "#{array2.inject { |sum, element| sum + element }}\n"
-puts
-print "#{array1.max_by(5) { |a| a.even? ? a : -1 }}\n"
-print "#{array2.max_by(5) { |a| a.even? ? a : -1 }}\n"
-puts
-print "#{array1.reject { |a| a.even? }}\n"
-print "#{array2.reject { |a| a.even? }}\n"
-puts
-print "#{array1.sort_by { |a| -a }}\n"
-print "#{array2.sort_by { |a| -a }}\n"
+array=[1,2,3,4,5]
+puts array.max_by { |a| a.even? ? 1 : 0 }

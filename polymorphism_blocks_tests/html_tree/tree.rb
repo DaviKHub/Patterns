@@ -90,7 +90,11 @@ class Tree
   def each_bfs(&block)
     bfs(&block)
   end
+
   def each_dfs(&block)
+    dfs(&block)
+  end
+  def each(&block)
     dfs(&block)
   end
 end
