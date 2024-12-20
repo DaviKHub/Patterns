@@ -1,30 +1,32 @@
-require '../student'
-require '../student_short'
-class StudentListTxt
-  attr_accessor :studentlist
-  attr_reader :path
+require_relative 'student_list'
 
-  def initialize(path, studentlist)
-    @path = path
-    @studentlist = studentlist
-  end
-
-  def read(path)
-    @studentlist = []
-    File.readlines(path, encoding: 'UTF-8').each do |line|
-      @studentlist.push(Student.parse_from_string(line))
-    end
-    return @studentlist
-  end
-
-  def write(path, file_name, studentlist)
-    File.open("#{path}/#{file_name}.txt", "w") do |file|
-      file.write(@studentlist.join("\n"))
+class StudentListTxt < StudentList
+  def load_from
+    if File.exist?(@path)
+      File.readlines(@path, encoding: 'UTF-8').each do |line|
+        @students_list.push(Student.parse_from_string(line))
+      end
+    else
+      @students_list = []
     end
   end
 
-  def get_from_id(id)
-    @studentlist.find_all { |student| student.id == id }
+  def save
+    preprocessing_data = @students_list.map do |student|
+      {
+        id: student.id,
+        name: student.name,
+        surname: student.surname,
+        patronymic: student.patronymic,
+        git: student.git,
+        mail: student.mail,
+        phone: student.phone,
+        telegram: student.telegram,
+        birthdate: student.birthdate,
+      }
+    end
+    File.open("#{@path}.txt", "w") do |file|
+      file.write(preprocessing_data.join("\n"))
+    end
   end
-
 end
