@@ -7,6 +7,7 @@ class DataList
   protected :selected
 
   def initialize(elements)
+    @column_names = column_names
     self.data = elements
     self.selected = []
   end
@@ -23,7 +24,7 @@ class DataList
   end
 
   def get_names
-    column_names
+    @column_names
   end
 
   def get_data
