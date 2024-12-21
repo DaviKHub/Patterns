@@ -1,16 +1,16 @@
 class StudentList
-  def initialize(path)
+  def initialize(path, strategy)
     @path = path
-    @students_list=[]
-    load_from
+    @strategy = strategy
+    @students_list = load
   end
 
-  def load_from
-    raise NotImplementedError
+  def load
+    @strategy.load(@path).map { |student| Student.new(**student) }
   end
 
   def save
-    raise NotImplementedError
+    @strategy.save(@path, @students_list)
   end
 
   def find_student_by_id(id)
@@ -65,7 +65,7 @@ class StudentList
     @students_list.size
   end
 
-  def to_s
-    @students_list.join("\n")
+  def to_a
+    @students_list
   end
 end

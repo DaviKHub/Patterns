@@ -1,19 +1,16 @@
 require 'json'
-require_relative 'student_list'
+require_relative 'file_strategy'
 
-class StudentListJson < StudentList
-  def load_from
-    if File.exist?(@path)
-      file_content = File.read(@path)
-      student_data = JSON.parse(file_content, symbolize_names: true)
-      @students_list = student_data.map { |data| Student.new(**data) }
-    else
-      @students_list = []
-    end
+class FileStrategyJSON < FileStrategy
+  def load(file_path)
+    return [] unless File.exist?(file_path)
+
+    file_content = File.read(file_path)
+    JSON.parse(file_content, symbolize_names: true)
   end
 
-  def save
-    preprocessing_data = @students_list.map do |student|
+  def save(file_path, data)
+    preprocessing_data = data.map do |student|
       {
         id: student.id,
         name: student.name,
