@@ -120,8 +120,8 @@ class Student < Person
     "#{surname}#{name[0]}.#{patronymic[0]}."
   end
 
-  def self.parse_from_string(string)
-    data = Person.parse_from_string(string)
+  def self.from_string(string)
+    data = Person.from_string(string)
     string.split('; ').each do |pair|
       key, value = pair.split(': ').map(&:strip)
       case key.downcase
@@ -144,6 +144,18 @@ class Student < Person
       end
     end
     Student.new(**data)
+  end
+
+  def self.from_hash(hash)
+    new(id: hash[:id].to_i,
+        surname: hash[:surname],
+        name: hash[:name],
+        patronymic: hash[:patronymic],
+        phone: hash[:phone],
+        telegram: hash[:telegram],
+        mail: hash[:mail],
+        birthdate: hash[:birthdate],
+        git: hash[:git])
   end
 
   def <=>(other)

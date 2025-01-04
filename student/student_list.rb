@@ -23,7 +23,7 @@ class StudentList
     short_students = @students_list[start_index..end_index] || []
     return existing_data_list || DataListStudentShort.new([]) if short_students.empty?
 
-    short_students = short_students.map { |student| StudentShort.initialize_from_student(student) }
+    short_students = short_students.map { |student| StudentShort.from_student(student) }
     if existing_data_list
       existing_data_list.data = short_students
       short_students.each_with_index { |_, ind| existing_data_list.select(ind) }

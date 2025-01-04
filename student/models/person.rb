@@ -26,7 +26,7 @@ class Person
     !git.nil? && !git.empty?
   end
 
-  def self.parse_from_string(string)
+  def self.from_string(string)
     data = {}
     string.split('; ').each do |pair|
       key, value = pair.split(': ').map(&:strip)

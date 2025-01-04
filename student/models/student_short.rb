@@ -19,7 +19,7 @@ class StudentShort < Person
     @contact = contact
   end
 
-  def self.initialize_from_student(student)
+  def self.from_student(student)
     data = {}
     data[:id] = student.id if student.id
     data[:initials] = student.initials
@@ -28,8 +28,8 @@ class StudentShort < Person
     StudentShort.send(:new, **data)
   end
 
-  def self.initialize_from_string(string)
-    data = Person.parse_from_string(string)
+  def self.from_string(string)
+    data = Person.from_string(string)
     string.split('; ').each do |pair|
       key, value = pair.split(': ').map(&:strip)
       case key.downcase

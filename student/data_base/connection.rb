@@ -1,12 +1,10 @@
 require 'pg'
 begin
-  connection = PG.connect(
-    dbname: 'students',
-    user: 'postgres',
-    password: '1234',
-    host: 'localhost',
-    port: 5432
-  )
+  connection = PG.connect(dbname: 'students',
+                          user: 'postgres',
+                          password: '1234',
+                          host: 'localhost',
+                          port: 5432)
   puts "Соединение с базой установлено"
   result = connection.exec("SELECT * FROM student;")
   result.each do |row|
