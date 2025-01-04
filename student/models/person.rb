@@ -15,7 +15,7 @@ class Person
   end
 
   def self.valid_id?(id)
-    id.to_s.match?(/\A\d{10}\z/)
+    id.is_a?(Integer)
   end
 
   def self.valid_git?(git)

@@ -49,7 +49,7 @@ class Student < Person
   end
 
   def birthdate=(birthdate)
-    Student.valid_date?(birthdate) ? @birthdate = Date.strptime(birthdate, '%d-%m-%Y') : raise(ArgumentError, birthdate)
+    Student.valid_date?(birthdate) ? @birthdate = Date.strptime(birthdate, '%Y-%m-%d') : raise(ArgumentError, birthdate)
   end
 
   def self.valid_name_parts?(string)
@@ -70,7 +70,7 @@ class Student < Person
 
   def self.valid_date?(date)
     begin
-      Date.strptime(date, '%d-%m-%Y')
+      Date.strptime(date, '%Y-%m-%d')
       true
     rescue ArgumentError
       false
