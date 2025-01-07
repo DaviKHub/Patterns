@@ -1,12 +1,10 @@
 require 'yaml'
-require_relative 'file_strategy'
-
 class FileStrategyYAML < FileStrategy
   def load(file_path)
     return [] unless File.exist?(file_path)
 
     file_content = File.read(file_path)
-    YAML.safe_load(file_content, permitted_classes: [Symbol], symbolize_names: true) || []
+    YAML.safe_load(file_content, permitted_classes: [Symbol, Date], symbolize_names: true) || []
   end
 
   def save(file_path, data)

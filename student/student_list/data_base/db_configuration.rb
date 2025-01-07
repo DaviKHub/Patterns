@@ -8,14 +8,14 @@ class DBConfiguration
               port: 5432 }.freeze
   @instance = nil
 
-  def self.instance
-    @instance ||= new
+  def self.instance(dbconfig = DEFAULT)
+    @instance ||= new(dbconfig)
   end
 
   attr_reader :connect
 
-  def initialize
-    @connect = PG.connect(DEFAULT)
+  private def initialize(dbconfig)
+    @connect = PG.connect(dbconfig)
   end
 
   def execute_query(query, params = [])

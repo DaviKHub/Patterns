@@ -1,4 +1,3 @@
-require_relative 'person'
 require 'date'
 
 class Student < Person
@@ -72,7 +71,7 @@ class Student < Person
     begin
       Date.strptime(date, '%Y-%m-%d')
       true
-    rescue ArgumentError
+    rescue
       false
     end
   end

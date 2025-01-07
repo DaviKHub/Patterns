@@ -1,5 +1,3 @@
-require_relative 'person'
-
 class StudentShort < Person
   attr_reader :initials, :contact
 

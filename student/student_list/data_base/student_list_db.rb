@@ -1,8 +1,8 @@
 require 'pg'
-require_relative '../models/student'
-require_relative '../models/student_short'
-require_relative '../data/data_list_student_short'
-require_relative 'db_configuration'
+require_relative '../../models/student'
+require_relative '../../models/student_short'
+require_relative '../../data_list/data_list_student_short'
+require_relative '../data_base/db_configuration'
 
 class StudentListDB
   attr_reader :connect
@@ -58,7 +58,7 @@ class StudentListDB
     raise ArgumentError, "Студент с ID #{id} не найден" if result.ntuples.zero?
   end
 
-  def get_count
+  def count
     result = @db_config.execute_query("SELECT COUNT(*) AS count FROM student")
     result[0]['count'].to_i
   end

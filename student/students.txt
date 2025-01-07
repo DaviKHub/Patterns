@@ -1,6 +1,0 @@
-ID: 0000000001; surname: Тестов; name: Тест; patronymic: Тестович; phone: +79123456789; telegram: @test; mail: test@ya.ru; git: https://github.com/test; birthdate: 02-01-1999
-ID: 0000000002; surname: Иванов; name: Иван; patronymic: Иванович; phone: +79219876543; telegram: @ivanov; mail: ivanov@mail.ru; git: https://github.com/ivanov; birthdate: 01-02-2000
-ID: 0000000004; surname: Сидоров; name: Павел; patronymic: Николаевич; phone: +79554321098; telegram: @psidorov; mail: psidorov@yandex.ru; git: https://github.com/psidorov; birthdate: 01-01-2001
-ID: 0000000003; surname: Петрова; name: Мария; patronymic: Сергеевна; phone: +79876543210; telegram: @mariapet; mail: mariapet@gmail.com; git: https://github.com/mariapet; birthdate: 03-10-1999
-ID: 0000000005; surname: Смирнов; name: Александр; patronymic: Олегович; phone: +79098765432; telegram: @alexsmirnov; mail: alex.smirnov@mail.ru; git: https://github.com/alexsmirnov; birthdate: 01-05-2005
-ID: 0000000006; surname: Кузнецова; name: Екатерина; patronymic: Андреевна; phone: +79112233445; telegram: @kuznetsovaek; mail: ek.kuznetsova@gmail.com; git: https://github.com/kuznetsovaek; birthdate: 10-12-2006
