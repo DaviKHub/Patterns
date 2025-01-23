@@ -1,0 +1,19 @@
+---
+- :id: 1
+  :name: Тест
+  :surname: Тестов
+  :patronymic: Тестович
+  :git: https://github.com/test
+  :mail: test@ya.ru
+  :phone: "+79123456789"
+  :telegram: "@test"
+  :birthdate: 1999-01-02
+- :id: 2
+  :name: Иван
+  :surname: Иванов
+  :patronymic: Иванович
+  :git: https://github.com/ivanov
+  :mail: ivanov@ivan.ru
+  :phone: "+79123452214"
+  :telegram: "@ivanov"
+  :birthdate: 2000-01-02

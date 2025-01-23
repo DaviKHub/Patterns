@@ -2,7 +2,8 @@ require 'pg'
 require_relative '../../models/student'
 require_relative '../../models/student_short'
 require_relative '../../data_list/data_list_student_short'
-require_relative '../data_base/db_configuration'
+require_relative '../data_base/d
+b_configuration'
 
 class StudentListDB
   attr_reader :connect

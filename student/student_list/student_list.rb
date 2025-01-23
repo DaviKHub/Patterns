@@ -40,6 +40,9 @@ class StudentList
   end
 
   def add(student)
+    if @students_list.include?(student)
+            raise ArgumentError
+    end
     new_id = (@students_list.map(&:id).max || 0) + 1
     student.id = new_id
     @students_list << student
@@ -48,12 +51,12 @@ class StudentList
 
   def replace_by_id(id, updated_student)
     index = @students_list.find_index { |student| student.id == id }
-    return false unless index
-
-    updated_student.id = id
+    raise IndexError, "wrong id" unless index
+    if @students_list.include?(updated_student)
+      raise ArgumentError, 'уже существует'
+    end
     @students_list[index] = updated_student
-    save
-    true
+    updated_student.id = id
   end
 
   def remove_by_id(id)
@@ -68,4 +71,5 @@ class StudentList
   def to_a
     @students_list
   end
+
 end

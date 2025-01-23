@@ -1,4 +1,5 @@
 require 'json'
+
 class FileStrategyJSON < FileStrategy
   def load(file_path)
     return [] unless File.exist?(file_path)

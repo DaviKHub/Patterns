@@ -1,3 +1,4 @@
+require_relative 'adapter'
 class StudentListAdapter < Adapter
   def initialize(path, strategy)
     @student_list = StudentList.new(path: path, strategy: strategy)

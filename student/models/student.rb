@@ -1,5 +1,5 @@
 require 'date'
-
+require_relative 'person'
 class Student < Person
 
   include Comparable
@@ -160,5 +160,9 @@ class Student < Person
   def <=>(other)
     return nil unless other.is_a?(Student)
     birthdate <=> other.birthdate
+  end
+
+  def ==(other)
+    self.git == other.git || self.phone == other.phone || self.telegram == other.telegram || self.mail == other.mail
   end
 end

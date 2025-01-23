@@ -84,8 +84,3 @@ class ArrayMethods
     @array
   end
 end
-# array=ArrayMethods.new([1,2,3,4,5,6])
-# array.max_by{|a|a.even?}
-
-array=[1,2,3,4,5]
-puts array.max_by { |a| a.even? ? 1 : 0 }

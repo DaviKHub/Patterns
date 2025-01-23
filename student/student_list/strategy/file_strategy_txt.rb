@@ -1,21 +1,25 @@
 require_relative 'file_strategy'
+
 class FileStrategyTXT < FileStrategy
   def load(file_path)
     return [] unless File.exist?(file_path)
-
-    file_content = File.read(file_path)
-    file_content.lines.map do |line|
-      student_data = line.strip.split(';').map do |part|
-        key_value = part.split(':').map(&:strip)
-        key_value.length == 2 ? [key_value[0].downcase.to_sym, key_value[1]] : nil
-      end.compact.to_h
-      student_data[:birthday] = Date.strptime(student_data[:birthday], '%d-%m-%Y') if student_data[:birthday]
-      student_data
+    data = File.read(file_path)
+    data.map do |student_data|
+      Student.new(id: student_data[:id],
+                  surname: student_data[:surname],
+                  name: student_data[:name],
+                  patronymic: student_data[:patronymic],
+                  phone: student_data[:phone],
+                  telegram: student_data[:telegram],
+                  mail: student_data[:mail],
+                  git: student_data[:git],
+                  birthdate: student_data[:birthdate],
+      )
     end
   end
 
-  def save
-    preprocessing_data = @students_list.map do |student|
+  def save(file_path, data)
+    preprocessing_data = data.map do |student|
       {
         id: student.id,
         name: student.name,
@@ -28,7 +32,7 @@ class FileStrategyTXT < FileStrategy
         birthdate: student.birthdate,
       }
     end
-    File.open("#{@path}.txt", "w") do |file|
+    File.open("#{file_path}", "w") do |file|
       file.write(preprocessing_data.join("\n"))
     end
   end

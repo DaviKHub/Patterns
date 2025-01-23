@@ -1,3 +1,4 @@
+require_relative 'adapter'
 class StudentDBAdapter < Adapter
   def initialize(db_config)
     @database = DBConfiguration.instance(db_config)

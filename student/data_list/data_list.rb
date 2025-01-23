@@ -1,47 +1,41 @@
 class DataList
 
-  attr_reader :data
-  attr_accessor :selected
-
-  protected :data
-  protected :selected
-
-  def initialize(elements)
-    @column_names = column_names
-    self.data = elements
-    self.selected = []
-  end
-
-  def select(number)
-    element = self.data[number]
-    if element && !self.selected.include?(element.id)
-      self.selected << number
+    def initialize(data)
+        self.data = data
+        @selected = []
     end
-  end
 
-  def get_selected
-    self.selected.dup
-  end
-
-  def get_names
-    @column_names
-  end
-
-  def get_data
-    result = [self.get_names]
-    index = 1
-    selected.each do |selected_index|
-      obj = self.data[selected_index]
-      row = build_row(index, obj)
-      result << row
-      index += 1
+    protected def data=(data)
+        unless data.is_a?(Array)
+			raise ArgumentError
+		end
+        @data = data.map { |element| deep_dup(element) }
     end
-    DataTable.new(result)
-  end
 
-  protected def data=(data)
-    @data = data.map { |element| deep_dup(element) }
-  end
+    def select(index)
+        raise ArgumentError unless  index >= 0 && index < @data.size
+        element = @data[index]
+        @selected << element unless @selected.include?(element)
+    end
+
+    def get_selected
+        deep_dup(@selected)
+    end
+
+    def get_names
+        raise ArgumentError
+    end
+
+    def get_data
+        res = @data.map.with_index do |element, index|
+            self.make_row(index)
+        end
+        DataTable.new(res)
+    end
+
+    def build_row(index)
+        raise ArgumentError
+    end
 
   protected def deep_dup(element)
     if element.is_a?(Array)
@@ -55,7 +49,4 @@ class DataList
     end
   end
 
-  protected def column_names
-    raise NotImplementedError
-  end
 end

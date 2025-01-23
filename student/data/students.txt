@@ -1,0 +1,2 @@
+{:id=>1, :name=>"Тест", :surname=>"Тестов", :patronymic=>"Тестович", :git=>"https://github.com/test", :mail=>"test@ya.ru", :phone=>"+79123456789", :telegram=>"@test", :birthdate=>#<Date: 1999-01-02 ((2451181j,0s,0n),+0s,2299161j)>}
+{:id=>2, :name=>"Иван", :surname=>"Иванов", :patronymic=>"Иванович", :git=>"https://github.com/ivanov", :mail=>"ivanov@ivan.ru", :phone=>"+79123452214", :telegram=>"@ivanov", :birthdate=>#<Date: 2000-01-02 ((2451546j,0s,0n),+0s,2299161j)>}
