@@ -1,4 +1,4 @@
 ## Диаграмма классов для Student
 
-![diagram_classes](https://github.com/user-attachments/assets/1d293545-f849-4a6e-adf9-c0f2e550bbe5)
+![diagram_classes](https://github.com/user-attachments/assets/1b16cfb1-b3f3-4715-882a-849f50608da4)
 
