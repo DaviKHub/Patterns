@@ -1,77 +1,77 @@
-require 'pg'
+require_relative 'connection'
 require_relative '../../models/student'
-require_relative '../../models/student_short'
-require_relative '../../data_list/data_list_student_short'
-require_relative '../data_base/d
-b_configuration'
 
 class StudentListDB
-  attr_reader :connect
 
-  def initialize(db_config)
-    @db_config = db_config
+  def initialize(config)
+    @config = config
   end
 
-  def get_by_id(id)
-    result = @db_config.execute_query("SELECT * FROM student WHERE id = $1", [id])
-    raise ArgumentError, "Студент с ID #{id} не найден" if result.ntuples.zero?
-    data = result.first.transform_keys(&:to_sym)
-    Student.from_hash(data)
+  def get_student_by_id(id)
+    data = @connection.execute("SELECT * FROM students WHERE id = $1", [id])
+    raise "Студент с ID #{id} не найден" if data.ntuples == 0
+    student = data[0].transform_keys { |key| key.to_sym }
+    Student.new(**student)
   end
 
-  def get_k_n_student_short_list(k, n, data_list)
-    raise ArgumentError, "Числа должны быть целыми и положительными" unless k.is_a?(Integer) && n.is_a?(Integer) && k > 0 && n > 0
+  def get_k_n_student_short_list(k, n)
     start = (k - 1) * n
-    result = @db_config.execute_query('SELECT * FROM student ORDER BY id LIMIT $1 OFFSET $2', [n, start])
-    students_short = result.map do |student|
-      student = student.transform_keys(&:to_sym)
-      StudentShort.from_student(Student.from_hash(student))
+    data = @connection.execute("SELECT * FROM students LIMIT $1 OFFSET $2", [n, start])
+    data.map do |row|
+      row = row.transform_keys { |key| key.to_sym }
+      Student.new(**row)
     end
-    data_list ||= DataListStudentShort.new(students_short)
-    data_list
   end
 
-  def add(student)
-    result = @db_config.execute_query("INSERT INTO student (second_name, first_name, patronymic, git, birthdate, phone_number, email, telegram)
-			VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id", student_fields(student))
-    Student.new(
-      id: result[0]['id'].to_i,
-      surname: student.surname,
-      name: student.name,
-      patronymic: student.patronymic,
-      git: student.git,
-      birthdate: student.birthdate,
-      phone: student.phone,
-      mail: student.email,
-      telegram: student.telegram
-    )
+  def add_student(student)
+    query = "INSERT INTO students (surname,name,patronymic,birthdate,phone,email,telegram,git) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)"
+    params = [student.surname,
+              student.name,
+              student.patronymic,
+              student.birthdate,
+              student.phone,
+              student.email,
+              student.telegram,
+              student.git]
+    @connection.execute(query, params)
   end
 
-  def replace_by_id(id, new_student)
-    @db_config.execute_query("UPDATE student SET second_name = $1, first_name = $2, patronymic = $3,
-			git = $4, birthdate = $5, phone_number = $6, email = $7, telegram = $8 WHERE id = $9",
-                             student_fields(new_student) + [id]
-    )
+  def replace_student_by_id(id, student)
+    query = "UPDATE students SET surname = $1, name = $2, patronymic = $3, birthdate = $4,phone = $5, email = $6, telegram = $7, git = $8 WHERE id = $9"
+    params = [student.surname,
+              student.name,
+              student.patronymic,
+              student.birthdate,
+              student.phone,
+              student.email,
+              student.telegram,
+              student.git,
+              id]
+    new_student = @connection.execute(query, params)
+    raise "Студент с ID #{id} не найден" if new_student.cmd_tuples == 0
   end
 
-  def remove_by_id(id)
-    result = @db_config.execute_query("DELETE FROM student WHERE id = $1", [id])
-    raise ArgumentError, "Студент с ID #{id} не найден" if result.ntuples.zero?
+  def delete_student_by_id(id)
+    result = @connection.execute("DELETE FROM students WHERE id = $1", [id])
+    raise "Студент с ID #{id} не найден" if result.cmd_tuples == 0
   end
 
-  def count
-    result = @db_config.execute_query("SELECT COUNT(*) AS count FROM student")
-    result[0]['count'].to_i
+  def count_students_short()
+    count = @connection.execute("SELECT COUNT(*) FROM students")
+    count[0]['count'].to_i
   end
 
-  private def student_fields(student)
-    [student.surname,
-     student.name,
-     student.patronymic,
-     student.git,
-     student.birthdate&.to_s,
-     student.phone,
-     student.mail,
-     student.telegram]
+  def read
+    data = @connection.execute("SELECT * FROM students")
+    data.map do |row|
+      row = row.transform_keys { |key| key.to_sym }
+      Student.new(**row)
+    end
   end
+
 end
+
+
+
+
+

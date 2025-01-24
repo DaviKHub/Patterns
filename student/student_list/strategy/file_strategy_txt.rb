@@ -1,7 +1,8 @@
 require_relative 'file_strategy'
+require_relative '../strategy/file_strategy'
 
 class FileStrategyTXT < FileStrategy
-  def load(file_path)
+  def read(file_path)
     return [] unless File.exist?(file_path)
     data = File.read(file_path)
     data.map do |student_data|

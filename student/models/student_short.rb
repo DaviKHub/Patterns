@@ -19,7 +19,7 @@ class StudentShort < Person
 
   def self.from_student(student)
     data = {}
-    data[:id] = student.id if student.id
+    data[:id] = student.id
     data[:initials] = student.initials
     data[:git] = student.git
     data[:contact] = student.contact

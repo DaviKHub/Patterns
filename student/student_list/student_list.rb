@@ -1,75 +1,102 @@
-class StudentList
-  def initialize(path:, strategy:)
-    @path = path
+require_relative '../models/student'
+require_relative '../models/student_short'
+require_relative '../data_list/data_list'
+require_relative '../data_list/data_list_student_short'
+require_relative '../student_list/strategy/file_strategy_json'
+require_relative '../student_list/strategy/file_strategy_yaml'
+
+class StudentsList
+  attr_reader :students
+
+  def initialize(filepath:, strategy:)
+    @filepath = filepath
     @strategy = strategy
-    @students_list = load
+    self.students = []
   end
 
-  def load
-    @strategy.load(@path)
+  def students=(students)
+    unless students.nil? || students.is_a?(Array)
+      raise ArgumentError, "Неверный тип данных"
+    end
+    @students = students
   end
 
-  def save
-    @strategy.save(@path, @students_list)
+  def read
+    self.students = @strategy.read(@filepath) # Исправлено с filepath на @filepath
+    if @students.empty?
+      puts "Файл #{@filepath} не содержит данных или данные не загружаются."
+    else
+      puts "Загружено #{students.size} студентов из файла #{@filepath}."
+    end
   end
 
-  def get_by_id(id)
-    @students_list.find { |student| student.id == id }
+  def write
+    @strategy.write(@filepath, self.students)
   end
 
-  def get_k_n_student_short_list(k, n, existing_data_list = nil)
-    start_index = (k - 1) * n
-    end_index = start_index + n - 1
-    short_students = @students_list[start_index..end_index] || []
-    return existing_data_list || DataListStudentShort.new([]) if short_students.empty?
+  def get_student_by_id(id)
+    student = self.students.find { |student| student.id == id }
+    raise IndexError, "Студент с ID #{id} не найден" if student.nil?
+    student
+  end
 
-    short_students = short_students.map { |student| StudentShort.from_student(student) }
-    if existing_data_list
-      existing_data_list.data = short_students
-      short_students.each_with_index { |_, ind| existing_data_list.select(ind) }
-      return existing_data_list
+  def get_k_n_student_short_list(k, n, data_list = nil)
+    raise "Список студентов пуст!" if self.students.nil? || self.students.empty?
+    if !k.is_a?(Integer) || !n.is_a?(Integer) || !k.positive? || !n.positive?
+      raise ArgumentError, "Числа должны быть целыми и положительными"
+    end
+    start = (k - 1) * n
+    selected = self.students[start, n] || []
+    students_short = selected.map { |student| StudentShort.from_student(student) }
+    data_list ||= DataListStudentShort.new(students_short, start)
+    data_list
+  end
+
+  def set_offset(offset)
+    @offset = offset
+  end
+
+  def sort_by_surname_initials
+    self.students.sort_by! { |student| student.surname_initials }
+  end
+
+  def add_student(student)
+    if self.students.any? { |existing_student| existing_student == student }
+      raise ArgumentError, "Такой студент уже существует в списке"
     end
 
-    selected_list = DataListStudentShort.new(short_students)
-    short_students.each_with_index { |_, ind| selected_list.select(ind) }
-    selected_list
+    new_id = self.students.empty? ? 1 : self.students.map(&:id).max + 1
+    student_with_new_id = Student.new(
+      surname: student.surname,
+      name: student.name,
+      patronymic: student.patronymic,
+      id: new_id,
+      git: student.git,
+      birthdate: student.birthdate,
+      phone: student.phone,
+      mail: student.mail,
+      telegram: student.telegram
+    )
+    self.students << student_with_new_id
   end
 
-  def sort_by_surname
-    @students_list.sort_by!(&:initials)
-  end
+  def replace_student_by_id(id, new_student)
+    index = self.students.find_index { |student| student.id == id }
+    raise IndexError, 'Студента с таким id нет' unless index
 
-  def add(student)
-    if @students_list.include?(student)
-            raise ArgumentError
+    if self.students.any? { |existing_student| existing_student == new_student && existing_student.id != id }
+      raise ArgumentError, "Замена невозможна: студент с такими же данными уже существует"
     end
-    new_id = (@students_list.map(&:id).max || 0) + 1
-    student.id = new_id
-    @students_list << student
-    save
+
+    new_student.id = id
+    self.students[index] = new_student
   end
 
-  def replace_by_id(id, updated_student)
-    index = @students_list.find_index { |student| student.id == id }
-    raise IndexError, "wrong id" unless index
-    if @students_list.include?(updated_student)
-      raise ArgumentError, 'уже существует'
-    end
-    @students_list[index] = updated_student
-    updated_student.id = id
+  def remove_student_by_id(id)
+    self.students.reject! { |student| student.id == id }
   end
 
-  def remove_by_id(id)
-    @students_list.reject! { |student| student.id == id }
-    save
+  def get_student_short_count
+    self.students.count
   end
-
-  def count
-    @students_list.size
-  end
-
-  def to_a
-    @students_list
-  end
-
 end

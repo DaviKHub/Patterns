@@ -1,52 +1,52 @@
 class DataList
+  attr_reader :data, :selected, :column_names
 
-    def initialize(data)
-        self.data = data
-        @selected = []
-    end
-
-    protected def data=(data)
-        unless data.is_a?(Array)
-			raise ArgumentError
-		end
-        @data = data.map { |element| deep_dup(element) }
-    end
-
-    def select(index)
-        raise ArgumentError unless  index >= 0 && index < @data.size
-        element = @data[index]
-        @selected << element unless @selected.include?(element)
-    end
-
-    def get_selected
-        deep_dup(@selected)
-    end
-
-    def get_names
-        raise ArgumentError
-    end
-
-    def get_data
-        res = @data.map.with_index do |element, index|
-            self.make_row(index)
-        end
-        DataTable.new(res)
-    end
-
-    def build_row(index)
-        raise ArgumentError
-    end
-
-  protected def deep_dup(element)
-    if element.is_a?(Array)
-      element.map { |sub_element| deep_dup(sub_element) }
-    else
-      begin
-        element.dup
-      rescue
-        element
-      end
-    end
+  def initialize(data)
+    self.data = data
+    @column_names = column_names
+    @selected = []
   end
 
+  def set_data(new_data)
+    raise ArgumentError, "Объект должен являться массивом" unless new_data.is_a?(Array)
+    self.data = new_data
+  end
+
+  def select(number)
+    raise ArgumentError, "Индекс выходит за пределы" unless number.between?(0, data.size - 1)
+
+    selected.clear
+    selected << number
+  end
+
+  def get_selected
+    selected
+  end
+
+  def build_table
+    [get_columns] + get_data
+  end
+
+  def get_columns
+    column_names
+  end
+
+  def get_data
+    get_objects_array
+  end
+
+  def data=(data)
+    raise ArgumentError, "Объект должен являться массивом" unless data.is_a?(Array)
+    @data = data
+  end
+
+  private
+
+  def get_names
+    raise NotImplementedError, "Метод не реализован в классе"
+  end
+
+  def get_objects_array
+    raise NotImplementedError, "Метод не реализован в классе"
+  end
 end

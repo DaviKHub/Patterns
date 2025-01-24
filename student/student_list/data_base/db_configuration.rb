@@ -1,6 +1,6 @@
 require 'pg'
 
-class DBConfiguration
+class Connection
   DEFAULT = { dbname: 'students',
               user: 'postgres',
               password: '1234',
@@ -8,22 +8,22 @@ class DBConfiguration
               port: 5432 }.freeze
   @instance = nil
 
-  def self.instance(dbconfig = DEFAULT)
-    @instance ||= new(dbconfig)
+  def self.instance
+    @instance ||= new
   end
 
   attr_reader :connect
 
-  private def initialize(dbconfig)
-    @connect = PG.connect(dbconfig)
+  def initialize
+    @connect = PG.connect(DEFAULT)
   end
 
   def execute_query(query, params = [])
-    connect.exec_params(query, params)
+    @connect.exec_params(query, params)
   end
 
   def close
-    connect.close
+    @connect.close
   end
 
   private_class_method :new

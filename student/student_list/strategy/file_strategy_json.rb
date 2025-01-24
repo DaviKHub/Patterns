@@ -1,7 +1,7 @@
 require 'json'
-
+require_relative '../strategy/file_strategy'
 class FileStrategyJSON < FileStrategy
-  def load(file_path)
+  def read(file_path)
     return [] unless File.exist?(file_path)
 
     data = JSON.parse(File.read(file_path), symbolize_names: true)

@@ -1,5 +1,5 @@
 class FileStrategy
-  def load(path)
+  def read(path)
     raise NotImplementedError
   end
 
