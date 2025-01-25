@@ -35,8 +35,8 @@ class DataListStudentShort < DataList
 
   private def get_objects_array
     puts "#{data.inspect}" # Отладка
-    data.map.with_index(1) do |object, index|
-      [index + @offset, object.initials, object.git, object.contact]
+    data.map.with_index(1) do |object|
+      [object.id, object.initials, object.git, object.contact]
     end
   end
 end

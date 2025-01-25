@@ -12,8 +12,6 @@ class ListController
     begin
 
       @students_list = StudentListDB.new
-      # @students_list = StudentsList.new(filepath: '/Users/david/Patterns/Patterns_proj/student/data/students.json',
-      #                                   strategy: FileStrategyJSON.new)
     rescue => e
       raise "Ошибка при загрузке данных: #{e.message}"
     end
@@ -23,14 +21,14 @@ class ListController
   end
 
   def refresh_data
-    students = @students_list.get_k_n_student_short_list(@view.current_page, @view.students_per_page)
+    students = @students_list.get_k_n_student_short_list(@view.current_page, 2)
     @data_list.replace_data(students)
     @data_list.notify
   end
 
   def change_page(page)
     begin
-      total_items = @students_list.get_student_short_count
+      total_items = @students_list.get_count_students_short
       total_pages = (total_items.to_f / @view.students_per_page).ceil
 
       new_page = @view.current_page + page

@@ -9,7 +9,7 @@ class ListView < FXMainWindow
 
   def initialize(app, controller: nil)
     super(app, "Список студентов", width: 1024, height: 768)
-    @students_per_page = 20
+    @students_per_page = 2
     @current_page = 1
     @controller = ListController.new(self)
 
@@ -91,7 +91,7 @@ class ListView < FXMainWindow
 
   def create_table_section
     table_frame = FXGroupBox.new(@student_list_view, "Список студентов", opts: GROUPBOX_NORMAL | LAYOUT_FILL)
-    @table = FXTable.new(table_frame, opts: LAYOUT_FILL)
+    @table = FXTable.new(table_frame, opts: LAYOUT_FILL|TABLE_COL_SIZABLE)
     @table.setTableSize(0, 4) # 4 столбца
     @table.setColumnText(0, "№")
     @table.setColumnText(1, "ФИО")
