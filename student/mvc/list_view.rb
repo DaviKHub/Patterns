@@ -25,22 +25,26 @@ class ListView < FXMainWindow
   end
 
   def set_table_params(column_names, whole_entities_count)
+    puts "Установка параметров таблицы: #{column_names.inspect}, Количество записей: #{whole_entities_count}" # Отладка
     @table.setTableSize(0, column_names.size)
     column_names.each_with_index { |name, index| @table.setColumnText(index, name) }
-
-    @total_pages = (whole_entities_count.to_f / @students_per_page).ceil
-    @page_label.text = "Страница #{@current_page} из #{@total_pages}"
+    @table.update
   end
 
   def set_table_data(data_table)
-    return if data_table.nil? || data_table.empty? # Пропустить, если data_table пустой или nil
+    puts "Получены данные для таблицы: #{data_table.inspect}" # Отладка
 
-    @table.setTableSize(data_table.size, data_table.first.size)
+    return if data_table.nil? || data_table.empty?
+
+    @table.setTableSize(data_table.size, 4)
     data_table.each_with_index do |row, row_index|
       row.each_with_index do |value, col_index|
+        puts "[#{row_index}, #{col_index}] #{value}"
         @table.setItemText(row_index, col_index, value.to_s)
       end
     end
+    @table.update
+    puts "Обновление таблицы завершено"
   end
 
   def refresh_view
@@ -88,8 +92,13 @@ class ListView < FXMainWindow
   def create_table_section
     table_frame = FXGroupBox.new(@student_list_view, "Список студентов", opts: GROUPBOX_NORMAL | LAYOUT_FILL)
     @table = FXTable.new(table_frame, opts: LAYOUT_FILL)
-    @table.setTableSize(0, 4)
+    @table.setTableSize(0, 4) # 4 столбца
+    @table.setColumnText(0, "№")
+    @table.setColumnText(1, "ФИО")
+    @table.setColumnText(2, "Git")
+    @table.setColumnText(3, "Контакт")
     @table.editable = false
+    @table.update
   end
 
   def create_pagination_controls
@@ -97,7 +106,7 @@ class ListView < FXMainWindow
     @page_label = FXLabel.new(pagination_frame, "Страница #{@current_page} из #{@total_pages}", opts: LAYOUT_CENTER_X)
 
     @prev_button = FXButton.new(pagination_frame, "Назад", nil, nil, 0, opts: BUTTON_NORMAL)
-    @next_button = FXButton.new(pagination_frame, "Вперед", nil, nil, 0, opts: BUTTON_NORMAL)
+    @next_button = FXButton.new(pagination_frame, "Вперёд", nil, nil, 0, opts: BUTTON_NORMAL)
 
     @prev_button.connect(SEL_COMMAND) { change_page(-1) }
     @next_button.connect(SEL_COMMAND) { change_page(1) }
@@ -113,6 +122,7 @@ class ListView < FXMainWindow
   end
 
   def change_page(page)
+    puts "Changing page by: #{page}" # Debug
     @controller.change_page(page)
   end
 

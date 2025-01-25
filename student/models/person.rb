@@ -7,7 +7,8 @@ class Person
   end
 
   def id=(id)
-    self.class.valid_id?(id) ? @id = id : raise(ArgumentError, id)
+    #self.class.valid_id?(id) ? @id = id : raise(ArgumentError, id)
+    @id = id
   end
 
   def git=(git)

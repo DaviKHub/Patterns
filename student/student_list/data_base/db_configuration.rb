@@ -1,4 +1,5 @@
 require 'pg'
+require_relative '../data_base/student_list_db'
 
 class Connection
   DEFAULT = { dbname: 'students',
@@ -18,7 +19,10 @@ class Connection
     @connect = PG.connect(DEFAULT)
   end
 
-  def execute_query(query, params = [])
+  def
+  @connect.exec_params(query, params) end
+
+  def execute(query, params = [])
     @connect.exec_params(query, params)
   end
 
